@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>시간표</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ building_name }} 시간표</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>교시/요일</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for period in range(1, 27) %}
+                <tr>
+                    <td>
+                        {{ period }}교시<br>
+                        {% set start_hour = 9 + ((period - 1) * 0.5) | int %}
+                        {% set start_minute = ((period - 1) * 30) % 60 %}
+                        {% set end_hour = 9 + (period * 0.5) | int %}
+                        {% set end_minute = (period * 30) % 60 %}
+                        {% if start_minute == 0 %}
+                            {% set start_time = start_hour ~ ":00" %}
+                        {% else %}
+                            {% set start_time = start_hour ~ ":" ~ start_minute %}
+                        {% endif %}
+                        {% if end_minute == 0 %}
+                            {% set end_time = end_hour ~ ":00" %}
+                        {% else %}
+                            {% set end_time = end_hour ~ ":" ~ end_minute %}
+                        {% endif %}
+                        [{{ start_time }} ~ {{ end_time }}]
+                    </td>
+                    {% for day in ['월', '화', '수', '목', '금'] %}
+                        <td>{{ timetable[day][period - 1] }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
