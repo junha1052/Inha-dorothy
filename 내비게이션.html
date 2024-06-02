@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Inha University Map</title>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&libraries=services"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+        #search {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        var map;
+        var markers = {};
+
+        function initMap(userLatitude, userLongitude) {
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(userLatitude, userLongitude),
+                level: 3
+            };
+            map = new kakao.maps.Map(container, options);
+
+            // 사용자 위치 마커
+            var userMarker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(userLatitude, userLongitude),
+                map: map
+            });
+        }
+
+        // 경로 검색 및 표시
+        function searchRoute(startLat, startLng, endLat, endLng) {
+            var directionsService = new kakao.maps.services.Directions();
+
+            var startLatLng = new kakao.maps.LatLng(startLat, startLng);
+            var endLatLng = new kakao.maps.LatLng(endLat, endLng);
+
+            // 출발지 마커 생성
+            if (markers['start']) {
+                markers['start'].setPosition(startLatLng);
+            } else {
+                markers['start'] = new kakao.maps.Marker({
+                    position: startLatLng,
+                    map: map
+                });
+            }
+
+            // 목적지 마커 생성
+            if (markers['end']) {
+                markers['end'].setPosition(endLatLng);
+            } else {
+                markers['end'] = new kakao.maps.Marker({
+                    position: endLatLng,
+                    map: map
+                });
+            }
+
+            directionsService.route({
+                origin: startLatLng,
+                destination: endLatLng,
+            }, function(response, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var path = response.routes[0].overview_path;
+                    var linePath = [];
+
+                    for (var i = 0; i < path.length; i++) {
+                        linePath.push(new kakao.maps.LatLng(path[i].lat(), path[i].lng()));
+                    }
+
+                    var polyline = new kakao.maps.Polyline({
+                        path: linePath,
+                        strokeWeight: 5,
+                        strokeColor: 'blue',
+                        strokeOpacity: 0.7
+                    });
+
+                    polyline.setMap(map);
+                }
+            });
+        }
+
+        window.onload = function() {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLatitude = position.coords.latitude;
+                var userLongitude = position.coords.longitude;
+
+                // 지도 초기화
+                initMap(userLatitude, userLongitude);
+
+                document.getElementById('searchRoute').addEventListener('click', function() {
+                    var start = document.getElementById('start').value.split(',');
+                    var end = document.getElementById('end').value.split(',');
+
+                    var startLat = parseFloat(start[1]);
+                    var startLng = parseFloat(start[0]);
+                    var endLat = parseFloat(end[1]);
+                    var endLng = parseFloat(end[0]);
+
+                    // 경로 찾기
+                    searchRoute(startLat, startLng, endLat, endLng);
+                });
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>Inha University Map</h1>
+    <div id="map"></div>
+    <div id="search">
+        출발지: <select id="start">
+            <option value="126.653317,37.450701">본관</option>
+            <option value="126.654567,37.450123">2호관</option>
+            <option value="126.655678,37.451234">60주년 기념관</option>
+            <option value="126.656789,37.452345">4호관</option>
+            <option value="126.657890,37.453456">5호관</option>
+            <option value="126.658901,37.454567">6호관</option>
+            <option value="126.659012,37.455678">학생회관</option>
+            <option value="126.660123,37.456789">정석학술정보관</option>
+            <option value="126.661234,37.457890">9호관</option>
+            <option value="126.662345,37.458901">서호관</option>
+            <option value="126.663456,37.459012">나빌레관</option>
+            <option value="126.664567,37.460123">하이테크센터</option>
+            <option value="126.665678,37.461234">로스쿨관</option>
+            <option value="126.666789,37.462345">정문</option>
+            <option value="126.667890,37.463456">후문</option>
+        </select>
+        목적지: <select id="end">
+            <option value="126.653317,37.450701">본관</option>
+            <option value="126.654567,37.450123">2호관</option>
+            <option value="126.655678,37.451234">60주년 기념관</option>
+            <option value="126.656789,37.452345">4호관</option>
+            <option value="126.657890,37.453456">5호관</option>
+            <option value="126.658901,37.454567">6호관</option>
+            <option value="126.659012,37.455678">학생회관</option>
+            <option value="126.660123,37.456789">정석학술정보관</option>
+            <option value="126.661234,37.457890">9호관</option>
+            <option value="126.662345,37.458901">서호관</option>
+            <option value="126.663456,37.459012">나빌레관</option>
+            <option value="126.664567,37.460123">하이테크센터</option>
+            <option value="126.665678,37.461234">로스쿨관</option>
+            <option value="126.666789,37.462345">정문</option>
+            <option value="126.667890,37.463456">후문</option>
+        </select>
+        <button id="searchRoute">경로 찾기</button>
+    </div>
+</body>
+</html>
