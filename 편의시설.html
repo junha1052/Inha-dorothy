@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>INHA Campus Map</title>
+    <style>
+.custom-info-window {
+  max-width: 300px; /* 정보창의 최대 너비 설정 */
+  padding: 10px; /* 적절한 패딩 값 설정 */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+  font-size: 14px; /* 글꼴 크기 조정 */
+  line-height: 1.5; /* 줄 간격 조정 */
+  box-sizing: border-box; /* 패딩을 포함한 전체 너비 설정 */
+}
+
+.custom-info-window div {
+  white-space: pre-wrap; /* 줄 바꿈 및 공백 유지 */
+}
+
+
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: none;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            width: 220px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar input[type="button"] {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar input[type="button"]:hover {
+            background-color: #007bff;
+        }
+
+        .image-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .image-container img {
+            width: 150px;
+        }
+
+        .map-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .map-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none; /* 숨겨진 상태 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation-name: animatetop;
+            animation-duration: 0.4s;
+        }
+
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0}
+            to {top: 0; opacity: 1}
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 지도 스타일 */
+        .map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div>
+                <h2>INHA CAMPUS MAP</h2>
+                <ul>
+                    <li><input type="button" value="편의점" onclick="openModal('convenienceStore')"></li>
+                    <li><input type="button" value="여학생 휴게실" onclick="openModal('femaleLounge')"></li>
+                    <li><input type="button" value="남학생 휴게실" onclick="openModal('maleLounge')"></li>
+                    <li><input type="button" value="서점" onclick="openModal('bookstore')"></li>
+                    <li><input type="button" value="식품" onclick="openModal('food')"></li>
+                    <li><input type="button" value="카페" onclick="openModal('cafe')"></li>
+                    <li><input type="button" value="사물함" onclick="openModal('locker')"></li>
+                    <li><input type="button" value="프린터" onclick="openModal('printer')"></li>
+                    <li><input type="button" value="ATM" onclick="openModal('atm')"></li>
+                    <li><input type="button" value="씨채널 안경(안경점)" onclick="openModal('opticalShop')"></li>
+                    <li><input type="button" value="잡화" onclick="openModal('miscellaneous')"></li>
+                </ul>
+            </div>
+            <div class="image-container">
+                <img src="https://i.namu.wiki/i/vqEA0Ydos3AdM5S8-8WvbGCwyxJzS7iIC18giRhfBUHeEohBDFV1GrFG-oCvaCzawzU63Z_P5aR8cOrlx9dthvNmDDZ63GzSM9FLzkR5K72T1kAyPcLiLoBl1KubeNpxyCFw8GXaw9VbGLLiQqcgKA.svg" alt="인하대로고">
+            </div>
+        </div>
+        <div class="map-container">
+            <img src="https://www.inha.ac.kr/CrossEditor/binary/images/000397/2023.9.5_-_%EB%93%9C%EB%A1%A0%EC%A0%84%EA%B2%BD_3.jpg" alt="INHA Campus Map">
+        </div>
+    </div>
+
+    <!-- 모달 구조 -->
+    <div id="convenienceStore" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('convenienceStore')">&times;</span>
+            <h2>편의점</h2>
+            <p>편의점에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapConvenienceStore" class="map"></div>
+        </div>
+    </div>
+    
+
+    <div id="femaleLounge" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('femaleLounge')">&times;</span>
+            <h2>여학생 휴게실</h2>
+            <p>여학생 휴게실에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapFemaleLounge" class="map"></div>
+        </div>
+    </div>
+
+    <div id="maleLounge" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('maleLounge')">&times;</span>
+            <h2>남학생 휴게실</h2>
+            <p>남학생 휴게실에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapMaleLounge" class="map"></div>
+        </div>
+    </div>
+
+    <div id="bookstore" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bookstorek')">&times;</span>
+            <h2>서점</h2>
+            <p>서점 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapBookstore" class="map"></div>
+        </div>
+    </div>
+
+    <div id="food" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('food')">&times;</span>
+            <h2>식품</h2>
+            <p>식품에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapFood" class="map"></div>
+        </div>
+    </div>
+
+    <div id="cafe" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cafe')">&times;</span>
+            <h2>카페</h2>
+            <p>카페에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapCafe" class="map"></div>
+        </div>
+    </div>
+
+    <div id="locker" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('locker')">&times;</span>
+            <h2>사물함</h2>
+            <p>사물함에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapLocker" class="map"></div>
+        </div>
+    </div>
+
+    <div id="printer" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('printer')">&times;</span>
+            <h2>프린터</h2>
+            <p>프린터에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapPrinter" class="map"></div>
+        </div>
+    </div>
+
+    <div id="atm" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('atm')">&times;</span>
+            <h2>ATM</h2>
+            <p>ATM에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapATM" class="map"></div>
+        </div>
+    </div>
+    
+    <div id="opticalShop" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('opticalShop')">&times;</span>
+            <h2>씨채널 안경(안경점)</h2>
+            <p>씨채널 안경에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapOpticalShop" class="map"></div>
+        </div>
+    </div>
+
+    <div id="miscellaneous" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('miscellaneous')">&times;</span>
+            <h2>잡화</h2>
+            <p>잡화에 대한 정보가 여기에 표시됩니다.</p>
+            <div id="mapMiscellaneous" class="map"></div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).style.display = "block";
+            initMap(id); // 모달 열 때 지도 초기화
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+
+        function initMap(modalId) {
+  let mapElementId = '';
+  let locations = [];
+
+  if (modalId === 'convenienceStore') {
+    mapElementId = 'mapConvenienceStore';
+    locations = [
+      { lat: 37.4496, lng: 126.6565, desc: 'Gs25 학생회관 1층 영업시간: 24시간' },
+      { lat: 37.4495, lng: 126.6525, desc: '이마트24 정석학술정보고관 지하 1층 영업시간: 24시간' },
+      { lat: 37.451031, lng: 126.652507, desc: '이마트24 5남 지하 영업시간: 24시간' },
+      { lat: 37.4502, lng: 126.6538, desc: '이마트 24 학생휴게관 1층 영업시간: 24시간' }
+    ];
+  } else if (modalId === 'femaleLounge') {
+    mapElementId = 'mapFemaleLounge';
+    locations = [
+      { lat: 37.4449969, lng: 126.655337, desc: '2남 240<br>영업시간: 09:00 - 18:00' },
+      { lat: 37.451031, lng: 126.652507 , desc: '5남 130<br>영업시간: 09:00 - 22:00'},
+      { lat: 37.447652, lng: 126.655831 , desc: '6호관 118<br> 영업시간: 24시간' },
+      { lat: 37.450707, lng: 126.657254 ,desc: '2북 273<br>영업시간: 08:00 - 20:00' }
+    ];
+  } else if (modalId === 'maleLounge') {
+    mapElementId = 'mapMaleLounge';
+    locations = [{ lat: 37.451181, lng: 126.655326, desc: '2북 273<br>영업시간: 09:00 - 18:00' }];
+  } else if (modalId === 'bookstore') {
+    mapElementId = 'mapBookstore';
+    locations = [{ lat: 37.4496, lng: 126.6565, desc: '학생회관 1층<br>영업시간: 10:00 - 20:00' }];
+  } else if (modalId === 'food') {
+    mapElementId = 'mapFood';
+    locations = [
+      { lat: 37.4495, lng: 126.6565, desc: '학생식당<br>영업시간: 08:00 - 22:00' },
+      { lat: 37.4497, lng: 126.6565, desc: '써브웨이<br>영업시간: 08:00 - 22:00' }, //써브웨이
+      { lat: 37.4496, lng: 126.6565, desc: '버거리<br>영업시간: 10:00 - 23:00' }, //버거리,학식
+      { lat: 37.449120, lng: 126.654747, desc: '교직원식당<br>영업시간: 11:00 - 20:00' } //교식
+    ];
+  } else if (modalId === 'cafe') {
+    mapElementId = 'mapCafe';
+    locations = [
+      { lat: 37.4502, lng: 126.6538, desc: '그라찌에<br>영업시간: 08:00 - 22:00' }, //그라찌에
+      { lat: 37.4514, lng: 126.6516, desc: '블루포트<br>영업시간: 09:00 - 21:00' }, //블루포ㅌ,
+      { lat: 37.4496, lng: 126.6565, desc: '블루포트<br>영업시간: 09:00 - 21:00' }, //블루포트
+      { lat: 37.448902, lng: 126.656137, desc: '마호가니<br>영업시간: 08:00 - 23:00' } //마호가니
+    ];
+  } else if (modalId === 'locker') {
+    mapElementId = 'mapLocker';
+    locations = [{ lat: 37.4495, lng: 126.652, desc: '사물함 위치<br>사용 가능 시간: 09:00 - 18:00' }];
+  } else if (modalId === 'printer') {
+    mapElementId = 'mapPrinter';
+    locations = [
+      { lat: 37.4496, lng: 126.6565, desc: '학생회관 1층<br>영업 시간: 24시간'  },
+      { lat: 37.447652, lng: 126.655831, desc: '6호관 1층<br>영업 시간: 08:00 - 22:00' },
+      { lat: 37.450707, lng: 126.657254, desc: '하이테크 2층<br> 영업 시간: 09:00 - 18:00' },
+      { lat: 37.450544, lng: 126.655257, desc: '4호관 1층영업<br> 시간: 24시간' },
+      { lat: 37.451031, lng: 126.652507, desc: '5남 지하 영업<br> 시간: 07:00 - 23:00' },
+      { lat: 37.4495, lng: 126.6525, desc: '정석학술정보관 지하영업<br> 시간: 24시간' }
+    ];
+} else if (modalId === 'atm') {
+  mapElementId = 'mapATM';
+  locations = [
+    { lat: 37.449117, lng: 126.654703, desc: '본관 지하1층' },
+    { lat: 37.451181, lng: 126.655326, desc: '2호관 북관 후문 출입문' },
+    { lat: 37.450707, lng: 126.657254, desc: '하이테크 1층 로비' },
+    { lat: 37.451772, lng: 126.653318, desc: '5호관 북관 1층 로비' },
+    { lat: 37.451032, lng: 126.652517, desc: '5호관 남관 1층 로비' },
+    { lat: 37.447753, lng: 126.655900, desc: '6호관 1층 로비' },
+    { lat: 37.4514, lng: 126.6516, desc: '서호관(사범대학) 1층 로비' },
+    { lat: 37.448331, lng: 126.651796, desc: '로스쿨관 1층 로비' },
+    { lat: 37.4495, lng: 126.6525, desc: '정석 지하 1층 계단 앞' },
+    { lat: 37.4496, lng: 126.6565, desc: '7호관(학생회관) 2층 하나은행' },
+  ];
+} else if (modalId === 'opticalShop') {
+  mapElementId = 'mapOpticalShop';
+  locations = [
+    { lat: 37.4496, lng: 126.6565, desc: '씨채널 안경(안경점) - 학생회관 1층<br>이용시간: 평일 09:30 – 19:00, 토요일 10:00 – 15:30' },
+  ];
+
+  } else if (modalId === 'miscellaneous') {
+    mapElementId = 'mapMiscellaneous';
+    locations = [{ lat: 37.4496, lng: 126.6565, desc: '학생회관 1층 영업시간: 09:00 - 18:00' }];
+  }
+
+  const mapContainer = document.getElementById(mapElementId); // mapElementId는 해당 맵을 담을 요소의 ID입니다.
+const mapOption = {
+  center: new kakao.maps.LatLng(locations[0].lat, locations[0].lng), // locations 배열의 첫 번째 위치를 지도의 중심으로 설정
+  level: 3 // 지도의 확대 레벨
+};
+const map = new kakao.maps.Map(mapContainer, mapOption);
+
+// 정보창 하나만 생성
+const infowindow = new kakao.maps.InfoWindow({
+  className: 'custom-info-window' // CSS 클래스 적용
+});
+
+locations.forEach(function(location) {
+  const markerPosition = new kakao.maps.LatLng(location.lat, location.lng);
+  const marker = new kakao.maps.Marker({
+    position: markerPosition
+  });
+  marker.setMap(map);
+
+  kakao.maps.event.addListener(marker, 'mouseover', (function(loc) {
+    return function() {
+      const iwContent = `<div>${loc.desc}</div>`; // 정보창에 표시될 내용
+      infowindow.setContent(iwContent);
+      infowindow.open(map, marker);
+    };
+  })(location));
+
+  kakao.maps.event.addListener(marker, 'mouseout', function() {
+    infowindow.close();
+  });
+});
+
+
+
+}
+
+    </script>
+</body>
+</html>
