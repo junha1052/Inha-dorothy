@@ -4,70 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강의실 검색</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Nanum Gothic', sans-serif; /* '나눔바른고딕' 글꼴 추가 */
-    font-weight: 600; /* 글꼴을 약간 두껍게 설정 */
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #eaeaea;
+        }
 
-form {
-    display: flex;
-    align-items: center;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: -400px;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 15px;
+            background-color: white;
+            width: 350px;
+        }
 
-label {
-    margin-right: 10px;
-}
+        label {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
 
-input[type="search"] {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
+        input[type="search"], .autocomplete-list {
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-input[type="search"]:focus {
-    border-color: dodgerblue;
+        input[type="search"] {
+            padding: 15px;
+            border-radius: 25px;
+            border: 2px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
 
-}
+        input[type="search"]:focus {
+            border-color: #007bff;
+        }
 
-input[type="search"]::placeholder {
-    font-size: 12px; /* 플레이스홀더 텍스트 크기 조정 */
-}
+        input[type="search"]::placeholder {
+            font-size: 16px;
+            color: #999;
+        }
 
-input[type="search"]:focus {
-    border-color: dodgerblue;
-}
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
 
-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    outline: none;
-}
+        button:hover {
+            background-color: #0056b3;
+        }
 
-button img {
-    width: 20px;
-    height: 20px;
-}
+        /* 수정된 스타일 */
+        .autocomplete-list {
+            border: none;
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            background-color: white;
+            z-index: 1;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-top: 5px;
+            width: calc(100% - 30px); /* 검색 입력창과 같은 너비로 조정 */
+        }
+
+        .autocomplete-list div {
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f0f0f0; /* 항목 사이에 경계선 추가 */
+        }
+
+        .autocomplete-list div:hover {
+            background-color: #f8f8f8;
+        }
+
+        .autocomplete-list div:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
     <form method="post" action="{{ url_for('search_classroom') }}">
         <label for="search">강의실 입력:</label>
-        <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하시오.">
-        <button type="submit"><img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png"/></button>
+        <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하세요.">
+        <div class="autocomplete-list" id="autocomplete-list"></div>
+        <button type="submit">검색</button>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const autocompleteList = document.getElementById('autocomplete-list');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                autocompleteList.innerHTML = '';
+
+                if (query) {
+                    fetch(`/get_suggestions?q=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const filteredSuggestions = data.suggestions;
+
+                            filteredSuggestions.forEach(suggestion => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.textContent = suggestion;
+                                suggestionItem.addEventListener('click', function() {
+                                    searchInput.value = suggestion;
+                                    autocompleteList.innerHTML = '';
+                                });
+                                autocompleteList.appendChild(suggestionItem);
+                            });
+                        });
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput) {
+                    autocompleteList.innerHTML = '';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
