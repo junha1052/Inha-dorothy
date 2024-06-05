@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation</title>
+    <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=mhmIdCoiFf3fia26XjEep2hhRkdoh2Rk9RBbTEVK"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div>
+        <label for="destination">목적지를 선택하세요:</label>
+        <select id="destination">
+            <option value="37.4496269,126.6544458">본관</option>
+            <option value="37.4510162,126.655597">2호관</option>
+            <option value="37.45082,126.6542">60주년 기념관</option>
+            <option value="37.45037,126.6552">4호관</option>
+            <option value="37.45117,126.6532">5호관</option>
+            <option value="37.4477242,126.6558786">6호관</option>
+            <option value="37.4496216,126.6565310">학생회관</option>
+            <option value="37.4397122,126.6633494">정석학술정보관</option>
+            <option value="37.4475290,126.6552470">9호관</option>
+            <option value="37.4515845,126.6507610">서호관</option>
+            <option value="37.4515963,126.6507088">나빌레관</option>
+            <option value="37.4507484,126.6570103">하이테크센터</option>
+            <option value="37.4483567,126.6520531">로스쿨관</option>
+            <option value="37.4472782,126.6538485">정문</option>
+            <option value="37.4511724,126.6563103">후문</option>
+        </select>
+        <button id="findRoute">길찾기</button>
+    </div>
+    <div id="map_div" style="width:100%;height:566px;"></div>
+
+    <script>
+        // 지도 생성
+        const CURRENT_MAP = new window.Tmapv2.Map('map_div', {
+            center: new window.Tmapv2.LatLng(37.44933418489706, 126.65433805399361), // 지도 초기 좌표
+            width: '100%',
+            height: '566px',
+            zoom: 16 // 기본 줌 레벨을 15로 설정
+        });
+
+        // 현재 위치 가져오기
+        function getCurrentPosition() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                } else {
+                    reject(new Error("Geolocation is not supported by this browser."));
+                }
+            });
+        }
+
+        // 목적지 선택 및 길찾기
+        document.getElementById('findRoute').addEventListener('click', async () => {
+            const destinationSelect = document.getElementById('destination');
+            const destinationValue = destinationSelect.value.split(',');
+            const arrival = {
+                latitude: parseFloat(destinationValue[0]),
+                longitude: parseFloat(destinationValue[1])
+            };
+
+            try {
+                const position = await getCurrentPosition();
+                const departure = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+
+                const requestData = {
+                    startX: departure.longitude,
+                    startY: departure.latitude,
+                    endX: arrival.longitude,
+                    endY: arrival.latitude,
+                    passList: '',
+                    reqCoordType: 'WGS84GEO',
+                    resCoordType: 'EPSG3857',
+                    startName: '출발지',
+                    endName: '도착지'
+                };
+
+                const headers = {
+                    appKey: 'mhmIdCoiFf3fia26XjEep2hhRkdoh2Rk9RBbTEVK'
+                };
+
+                // API 요청
+                axios.post('https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result',
+                    requestData,
+                    { headers: headers }
+                ).then((response) => {
+                    const resultData = response.data.features;
+                    const drawInfoArr = [];
+
+                    for (let i in resultData) {
+                        const geometry = resultData[i].geometry;
+                        if (geometry.type == 'LineString') {
+                            for (let j in geometry.coordinates) {
+                                const latlng = new window.Tmapv2.Point(
+                                    geometry.coordinates[j][0],
+                                    geometry.coordinates[j][1]
+                                );
+                                const convertPoint = window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                                const convertChange = new window.Tmapv2.LatLng(convertPoint._lat, convertPoint._lng);
+                                drawInfoArr.push(convertChange);
+                            }
+                        }
+                    }
+
+                    // 경로 그리기
+                    drawLine(drawInfoArr, departure, arrival);
+                }).catch((error) => {
+                    console.error('Error:', error);
+                });
+            } catch (error) {
+                console.error('Geolocation Error:', error);
+            }
+        });
+
+        function drawLine(arrPoint, departure, arrival) {
+            // 기존 라인 제거
+            if (window.polyline) {
+                window.polyline.setMap(null);
+            }
+
+            // 출발지 마커
+            new window.Tmapv2.Marker({
+                position: new window.Tmapv2.LatLng(departure.latitude, departure.longitude),
+                map: CURRENT_MAP,
+                title: '출발지',
+                icon: 'http://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_s.png',
+                iconSize: new window.Tmapv2.Size(24, 38)
+            });
+
+            // 도착지 마커
+            new window.Tmapv2.Marker({
+                position: new window.Tmapv2.LatLng(arrival.latitude, arrival.longitude),
+                map: CURRENT_MAP,
+                title: '도착지',
+                icon: 'http://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_e.png',
+                iconSize: new window.Tmapv2.Size(24, 38)
+            });
+
+            // 경로 라인 그리기
+            window.polyline = new window.Tmapv2.Polyline({
+                path: arrPoint,
+                strokeColor: '#0000FF',
+                strokeWeight: 6,
+                map: CURRENT_MAP
+            });
+
+            // 경로가 포함되도록 지도를 확대/축소
+            const bounds = new window.Tmapv2.LatLngBounds();
+            bounds.extend(new window.Tmapv2.LatLng(departure.latitude, departure.longitude));
+            bounds.extend(new window.Tmapv2.LatLng(arrival.latitude, arrival.longitude));
+            arrPoint.forEach(point => bounds.extend(point));
+            CURRENT_MAP.fitBounds(bounds);
+        }
+    </script>
+</body>
+</html>
+
