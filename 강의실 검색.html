@@ -57,7 +57,7 @@
             height: 20px;
         }
     </style>
-</head>
+</head>]
 <body>
     <form method="post" action="{{ url_for('search_classroom') }}">
         <label for="search">강의실 입력:</label>
@@ -95,9 +95,17 @@
             <option value="일">일</option>
         </select>
         <label for="start_time">시작 시간:</label>
+        <select id="start_time_am_pm" name="start_time_am_pm">
+        <option value="AM">오전</option>
+        <option value="PM">오후</option>
+        </select>
         <input type="time" id="start_time" name="start_time">
         <label for="end_time">종료 시간:</label>
-        <input type="time" id="end_time" name="end_time">
-        <button type="submit">검색</button>
-    </form>
-</body>    
+        <select id="end_time_am_pm" name="end_time_am_pm">
+            <option value="AM">오전</option>
+            <option value="PM">오후</option>
+    </select>
+    <input type="time" id="end_time" name="end_time">
+    <button type="submit">검색</button>
+</body>
+</html>
