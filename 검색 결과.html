@@ -2,27 +2,77 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>강의실 검색 결과</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과</title>
+    <style>
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: gold;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a:hover {
+            background-color: black;
+            color: gold;
+        }
+    </style>
 </head>
 <body>
-    <h1>강의실 검색 결과</h1>
-    <p><strong>강의실:</strong> {{ building_name }}</p>
+    <h1>{{ building_name }} 검색 결과</h1>
     <table>
-        <thead>
-            <tr>
-                <th>과목명</th>
-                <th>시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for index, row in results.iterrows() %}
-            <tr>
-            
-                <td>{{ row['과목명'] }}</td>
-                <td>{{ row['시간'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>과목명</th>
+            <th>시간</th>
+        </tr>
+        {% for index, row in results.iterrows() %}
+        <tr>
+            <td>{{ row['과목명'] }}</td>
+            <td>{{ row['시간'] }}</td>
+        </tr>
+        {% endfor %}
     </table>
+    <a href="{{ url_for('search_classroom') }}">다시 검색</a>
 </body>
 </html>
+
+
+
