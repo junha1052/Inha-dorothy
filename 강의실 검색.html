@@ -5,107 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강의실 검색</title>
     <style>
-        body {
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            background-image: linear-gradient(to bottom, #f8faff, #cce2f9); /* 그라데이션 배경 추가 */
+            min-height: 100vh; /* 컨테이너가 최소 화면 높이를 차지하도록 설정 */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Nanum Gothic', sans-serif; /* '나눔바른고딕' 글꼴 추가 */
-            font-weight: 600; /* 글꼴을 약간 두껍게 설정 */
+            padding: 20px;
         }
 
-        form {
-            display: flex;
-            align-items: center;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        .form-wrapper {
+            width: 45%; /* 반절 공간을 차지 */
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+            border-radius: 10px; /* 모서리 둥글게 */
+        }
+
+        .form-wrapper label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-wrapper input[type="search"],
+        .form-wrapper select,
+        .form-wrapper input[type="time"],
+        .form-wrapper button {
+            width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            margin-top: -400px;
-        }
-
-        label {
-            margin-right: 10px;
-        }
-
-        input[type="search"], select, input[type="time"] {
-            padding: 8px;
+            margin-bottom: 20px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        input[type="search"]:focus, select:focus, input[type="time"]:focus {
+        .form-wrapper input[type="search"]:focus,
+        .form-wrapper select:focus,
+        .form-wrapper input[type="time"]:focus,
+        .form-wrapper button:focus {
             border-color: dodgerblue;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.5); /* 파란색 그림자 추가 */
         }
 
-        input[type="search"]::placeholder {
-            font-size: 12px; /* 플레이스홀더 텍스트 크기 조정 */
-        }
-
-        button {
-            background: none;
+        .form-wrapper button {
+            background-color: #007bff;
+            color: white;
             border: none;
             cursor: pointer;
-            outline: none;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
-        button img {
+        .form-wrapper button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05); /* 버튼 크기 확대 */
+        }
+
+        .form-wrapper button img {
             width: 20px;
             height: 20px;
         }
+
+        .form-wrapper h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+        }
     </style>
-</head>]
+</head>
 <body>
-    <form method="post" action="{{ url_for('search_classroom') }}">
-        <label for="search">강의실 입력:</label>
-        <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하시오.">
-        <button type="submit"><img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png"/></button>
-    </form>
-    <form method="post" action="{{ url_for('search_empty_classrooms') }}">
-        <label for="building">건물 선택:</label>
-        <select id="building" name="building">
-            <option value="60">60주년 기념관</option>
-            <option value="1">본관 1호관</option>
-            <option value="2S">2호관(남)</option>
-            <option value="2N">2호관(북)</option>
-            <option value="2E">2호관(동)</option>
-            <option value="2">2호관(서)</option>
-            <option value="4">4호관</option>
-            <option value="5S">5호관(남)</option>
-            <option value="5N">5호관(북)</option>
-            <option value="5E">5호관(동)</option>
-            <option value="5">5호관(서)</option>
-            <option value="6">6호관</option>
-            <option value="7">7호관</option>
-            <option value="9">9호관</option>
-            <option value="하">하이테크</option>
-            <option value="서">서호관</option>
-        </select>
-        <label for="day">요일 입력:</label>
-        <select id="day" name="day">
-            <option value="월">월</option>
-            <option value="화">화</option>
-            <option value="수">수</option>
-            <option value="목">목</option>
-            <option value="금">금</option>
-            <option value="토">토</option>
-            <option value="일">일</option>
-        </select>
-        <label for="start_time">시작 시간:</label>
-        <select id="start_time_am_pm" name="start_time_am_pm">
-        <option value="AM">오전</option>
-        <option value="PM">오후</option>
-        </select>
-        <input type="time" id="start_time" name="start_time">
-        <label for="end_time">종료 시간:</label>
-        <select id="end_time_am_pm" name="end_time_am_pm">
-            <option value="AM">오전</option>
-            <option value="PM">오후</option>
-    </select>
-    <input type="time" id="end_time" name="end_time">
-    <button type="submit">검색</button>
+    <div class="container">
+        <div class="form-wrapper">
+            <h2>강의실 시간표 확인 하기</h2>
+            <form method="post" action="{{ url_for('search_classroom') }}">
+                <label for="search">강의실 입력:</label>
+                <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하시오.">
+                <button type="submit"><img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png"/></button>
+            </form>
+        </div>
+        <div class="form-wrapper">
+            <h2>빈 강의실 찾기</h2>
+            <form method="post" action="{{ url_for('search_empty_classrooms') }}">
+                <label for="building">건물 선택:</label>
+                <select id="building" name="building">
+                    <option value="60">60주년 기념관</option>
+                    <option value="1">본관 1호관</option>
+                    <option value="2S">2호관(남)</option>
+                    <option value="2N">2호관(북)</option>
+                    <option value="2E">2호관(동)</option>
+                    <option value="2">2호관(서)</option>
+                    <option value="4">4호관</option>
+                    <option value="5S">5호관(남)</option>
+                    <option value="5N">5호관(북)</option>
+                    <option value="5E">5호관(동)</option>
+                    <option value="5">5호관(서)</option>
+                    <option value="6">6호관</option>
+                    <option value="7">7호관</option>
+                    <option value="9">9호관</option>
+                    <option value="하">하이테크</option>
+                    <option value="서">서호관</option>
+                </select>
+                <label for="day">요일 입력:</label>
+                <select id="day" name="day">
+                    <option value="월">월</option>
+                    <option value="화">화</option>
+                    <option value="수">수</option>
+                    <option value="목">목</option>
+                    <option value="금">금</option>
+                    <option value="토">토</option>
+                    <option value="일">일</option>
+                </select>
+                <label for="start_time">시작 시간:</label>
+                <input type="time" id="start_time" name="start_time">
+                <label for="end_time">종료 시간:</label>
+                <input type="time" id="end_time" name="end_time">
+                <button type="submit">검색</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
