@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Inha University Map</title>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+        #search {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        // 사용자 위치 가져오기
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var userLatitude = position.coords.latitude;
+            var userLongitude = position.coords.longitude;
+
+            // 사용자 위치를 지도에 표시하는 등의 추가 작업 수행
+            initMap(userLatitude, userLongitude);
+        });
+
+        // Kakao Maps API 초기화
+function initMap(userLatitude, userLongitude) {
+    var container = document.getElementById('map');
+    var options = {
+        center: new kakao.maps.LatLng(userLatitude, userLongitude),
+        level: 3
+    };
+
+    var map = new kakao.maps.Map(container, options);
+
+    // 경로 검색 및 표시 함수 호출
+    searchRoute(userLatitude, userLongitude);
+}
+
+// 경로 검색 및 표시
+function searchRoute(userLatitude, userLongitude) {
+    var directionsService = new kakao.maps.services.Directions();
+    var destinationCoords = document.getElementById('destination').value.split(',');
+    var destinationLatitude = parseFloat(destinationCoords[0]);
+    var destinationLongitude = parseFloat(destinationCoords[1]);
+
+    directionsService.route({
+        origin: new kakao.maps.LatLng(userLatitude, userLongitude),
+        destination: new kakao.maps.LatLng(destinationLatitude, destinationLongitude),
+    }, function(response, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            var path = response.routes[0].overview_path;
+            var linePath = [];
+
+            for (var i = 0; i < path.length; i++) {
+                linePath.push(new kakao.maps.LatLng(path[i].lat(), path[i].lng()));
+            }
+
+            var polyline = new kakao.maps.Polyline({
+                path: linePath,
+                strokeWeight: 5,
+                strokeColor: 'blue',
+                strokeOpacity: 0.7
+            });
+
+            polyline.setMap(map);
+        }
+    });
+}
+
+// 경로 검색 버튼 클릭 이벤트 처리
+document.getElementById('searchRoute').addEventListener('click', function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var userLatitude = position.coords.latitude;
+        var userLongitude = position.coords.longitude;
+        searchRoute(userLatitude, userLongitude);
+    });
+});
+
+
+
+
+        function initMap() {
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(37.451234, 126.654567), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 출발지와 목적지 마커를 생성합니다
+            var markers = {};
+
+            document.getElementById('searchRoute').addEventListener('click', function() {
+                var start = document.getElementById('start').value.split(',');
+                var end = document.getElementById('end').value.split(',');
+
+                var startLatLng = new kakao.maps.LatLng(start[1], start[0]);
+                var endLatLng = new kakao.maps.LatLng(end[1], end[0]);
+
+                // 출발지 마커 생성
+                if (markers['start']) {
+                    markers['start'].setPosition(startLatLng);
+                } else {
+                    markers['start'] = new kakao.maps.Marker({
+                        position: startLatLng,
+                        map: map
+                    });
+                }
+
+                // 목적지 마커 생성
+                if (markers['end']) {
+                    markers['end'].setPosition(endLatLng);
+                } else {
+                    markers['end'] = new kakao.maps.Marker({
+                        position: endLatLng,
+                        map: map
+                    });
+                }
+
+                // 경로 찾기
+                var directionsService = new kakao.maps.services.Directions();
+
+                directionsService.route({
+                    origin: startLatLng,
+                    destination: endLatLng,
+                }, function(response, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        var path = response.routes[0].overview_path;
+                        var linePath = [];
+
+                        for (var i = 0; i < path.length; i++) {
+                            linePath.push(new kakao.maps.LatLng(path[i].lat(), path[i].lng()));
+                        }
+
+                        var polyline = new kakao.maps.Polyline({
+                            path: linePath,
+                            strokeWeight: 5,
+                            strokeColor: 'blue',
+                            strokeOpacity: 0.7
+                        });
+
+                        polyline.setMap(map);
+                    }
+                });
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+</head>
+<body>
+    <h1>Inha University Map</h1>
+    <div id="map"></div>
+    <div id="search">
+        출발지: <select id="start">
+            <option value="37.4496269,126.6544458">본관</option>
+            <option value="37.4510162,126.655597">2호관</option>
+            <option value="37.45082, 126.6542">60주년 기념관</option>
+            <option value="37.45037, 126.6552">4호관</option>
+            <option value="37.45117, 126.6532">5호관</option>
+            <option value="37.4477242, 126.6558786">6호관</option>
+            <option value="37.4496216, 126.6565310">학생회관</option>
+            <option value="37.4397122,126.6633494">정석학술정보관</option>
+            <option value="37.4475290, 126.6552470">9호관</option>
+            <option value="37.4515845, 126.6507610">서호관</option>
+            <option value="37.4515963, 126.6507088">나빌레관</option>
+            <option value="37.4507484, 126.6570103">하이테크센터</option>
+            <option value="37.4483567, 126.6520531">로스쿨관</option>
+            <option value="37.4472782, 126.6538485">정문</option>
+            <option value="37.4511724, 126.6563103">후문</option>
+        </select>
+        목적지: <select id="end">
+            <option value="37.4496269,126.6544458">본관</option>
+            <option value="37.4510162,126.655597">2호관</option>
+            <option value="37.45082, 126.6542">60주년 기념관</option>
+            <option value="37.45037, 126.6552">4호관</option>
+            <option value="37.45117, 126.6532">5호관</option>
+            <option value="37.4477242, 126.6558786">6호관</option>
+            <option value="37.4496216, 126.6565310">학생회관</option>
+            <option value="37.4397122,126.6633494">정석학술정보관</option>
+            <option value="37.4475290, 126.6552470">9호관</option>
+            <option value="37.4515845, 126.6507610">서호관</option>
+            <option value="37.4515963, 126.6507088">나빌레관</option>
+            <option value="37.4507484, 126.6570103">하이테크센터</option>
+            <option value="37.4483567, 126.6520531">로스쿨관</option>
+            <option value="37.4472782, 126.6538485">정문</option>
+            <option value="37.4511724, 126.6563103">후문</option>
+        </select>
+        <button id="searchRoute">경로 찾기</button>
+    </div>
+    <script>
+        // 지도 초기화
+        var mapContainer = document.getElementById('map'),
+            mapOption = {
+                center: new kakao.maps.LatLng(37.450701, 126.653339), // 인하대학교 중심
+                level: 3
+        }; 
+
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 경로 검색 함수
+        function searchRoute() {
+            var start = document.getElementById('start').value.split(',');
+            var end = document.getElementById('end').value.split(',');
+            var startLatLng = new kakao.maps.LatLng(start[0], start[1]);
+            var endLatLng = new kakao.maps.LatLng(end[0], end[1]);
+
+            findRoute(startLatLng, endLatLng);
+        }
+
+        // 경로 그리기 함수
+        function findRoute(startLatLng, endLatLng) {
+            var linePath = [startLatLng, endLatLng];
+
+            var polyline = new kakao.maps.Polyline({
+                path: linePath,
+                strokeWeight: 5,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeStyle: 'solid'
+            });
+
+            polyline.setMap(map);
+
+            // 지도 영역을 두 지점을 포함하도록 조정
+            var bounds = new kakao.maps.LatLngBounds();
+            bounds.extend(startLatLng);
+            bounds.extend(endLatLng);
+            map.setBounds(bounds);
+        }
+    </script>
+</body>
+</html>
