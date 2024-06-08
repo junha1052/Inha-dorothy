@@ -139,15 +139,19 @@ def search_empty_classrooms():
     return render_template('강의실 검색.html')
 
 
-@app.route('/get_suggestions')
+
+@app.route('/get_suggestions', methods=['GET'])
 def get_suggestions():
     query = request.args.get('q', '').lower()
     if query:
         filtered_suggestions = [s for s in classroom_suggestions if query in s.lower()]
     else:
         filtered_suggestions = []
-    return jsonify({'suggestions': filtered_suggestions})
 
+    # 중복 제거 및 알파벳/숫자 순으로 정렬
+    unique_suggestions = sorted(set(filtered_suggestions), key=lambda x: (x.isdigit(), x))
+
+    return jsonify({'suggestions': unique_suggestions})
 
 
 @app.route('/네비게이션')
@@ -160,5 +164,8 @@ def 편의시설():
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
+
+
+
 
 
