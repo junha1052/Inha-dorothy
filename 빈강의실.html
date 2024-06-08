@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빈 강의실 검색 결과</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        p {
+            color: #888;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>빈 강의실 검색 결과</h1>
+    {% if sorted_classrooms %}
+        <table>
+            <thead>
+                <tr>
+                    <th>강의실</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classroom in sorted_classrooms %}
+                    <tr>
+                        <td>{{ classroom }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>검색 결과가 없습니다.</p>
+    {% endif %}
+</body>
+</html>
