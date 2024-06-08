@@ -1,86 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inha University Map</title>
+    <meta charset="utf-8">
+    <title>Inha University Campus Navigation</title>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
-    <script>
-        function initMap() {
-            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                mapOption = {
-                    center: new kakao.maps.LatLng(37.450701, 126.657157), // 지도의 중심좌표
-                    level: 3 // 지도의 확대 레벨
-                };
-
-            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-            // 경로 찾기
-            var directionsService = new kakao.maps.services.Directions();
-
-            document.getElementById('searchRoute').onclick = function() {
-                // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-                if (navigator.geolocation) {
-                    
-                    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        
-                        var lat = position.coords.latitude, // 위도
-                            lon = position.coords.longitude; // 경도
-                        
-                        var startLatLng = new kakao.maps.LatLng(lat, lon); // 현재 위치를 출발지로 설정
-
-                        var endSelect = document.getElementById('end');
-                        var endLatLng = new kakao.maps.LatLng(endSelect.options[endSelect.selectedIndex].value.split(',')[0], endSelect.options[endSelect.selectedIndex].value.split(',')[1]);
-                        
-                        directionsService.route({
-                            origin: startLatLng,
-                            destination: endLatLng,
-                        }, function(response, status) {
-                            if (status === kakao.maps.services.Status.OK) {
-                                var path = response.routes[0].overview_path;
-                                var linePath = [];
-
-                                for (var i = 0; i < path.length; i++) {
-                                    linePath.push(new kakao.maps.LatLng(path[i].lat(), path[i].lng()));
-                                }
-
-                                var polyline = new kakao.maps.Polyline({
-                                    path: linePath,
-                                    strokeWeight: 5,
-                                    strokeColor: 'blue',
-                                    strokeOpacity: 0.7
-                                });
-
-                                polyline.setMap(map);
-
-                                // 시작점 마커 추가
-                                var startMarker = new kakao.maps.Marker({
-                                    map: map,
-                                    position: startLatLng
-                                });
-
-                                // 끝점 마커 추가
-                                var endMarker = new kakao.maps.Marker({
-                                    map: map,
-                                    position: endLatLng
-                                });
-                            }
-                        });
-                    });
-
-                } else { // HTML5의 GeoLocation을 사용할 수 없을 때의 처리
-                    alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
-                }
-            }
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
         }
-
-        window.onload = initMap;
-    </script>
+    </style>
 </head>
 <body>
-    <h1>Inha University Map</h1>
-    <div id="map" style="width:100%;height:350px;"></div>
-    <div id="search">
-        목적지: <select id="end">
+    <h1>Inha University Campus Navigation</h1>
+    <div id="map"></div>
+    <form id="nav-form">
+        <label for="start">출발지:</label>
+        <select id="start">
             <option value="37.4496269,126.6544458">본관</option>
             <option value="37.4510162,126.655597">2호관</option>
             <option value="37.45082, 126.6542">60주년 기념관</option>
@@ -97,7 +33,103 @@
             <option value="37.4472782, 126.6538485">정문</option>
             <option value="37.4511724, 126.6563103">후문</option>
         </select>
-        <button id="searchRoute">경로 찾기</button>
-    </div>
-</body>
-</html>
+        <label for="end">도착지:</label>
+        <select id="end">
+            <option value="37.4496269,126.6544458">본관</option>
+            <option value="37.4510162,126.655597">2호관</option>
+            <option value="37.45082, 126.6542">60주년 기념관</option>
+            <option value="37.45037, 126.6552">4호관</option>
+            <option value="37.45117, 126.6532">5호관</option>
+            <option value="37.4477242, 126.6558786">6호관</option>
+            <option value="37.4496216, 126.6565310">학생회관</option>
+            <option value="37.4397122,126.6633494">정석학술정보관</option>
+            <option value="37.4475290, 126.6552470">9호관</option>
+            <option value="37.4515845, 126.6507610">서호관</option>
+            <option value="37.4515963, 126.6507088">나빌레관</option>
+            <option value="37.4507484, 126.6570103">하이테크센터</option>
+            <option value="37.4483567, 126.6520531">로스쿨관</option>
+            <option value="37.4472782, 126.6538485">정문</option>
+            <option value="37.4511724, 126.6563103">후문</option>
+        </select>
+        <button type="submit">경로 찾기</button>
+    </form>
+    
+    <script>
+        var mapContainer = document.getElementById('map'),
+            mapOption = { 
+                center: new kakao.maps.LatLng(37.44933418489706, 126.65433805399361), // 인하대 중심 좌표
+                level: 3 
+            };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
+        if (navigator.geolocation) {
+            
+            // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+            navigator.geolocation.getCurrentPosition(function(position) {
+                
+                var lat = position.coords.latitude, // 위도
+                    lon = position.coords.longitude; // 경도
+                
+                var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+                    message = '<div style="padding:5px;">현재 위치입니다.</div>'; // 인포윈도우에 표시될 내용입니다
+                
+                // 마커와 인포윈도우를 표시합니다
+                displayMarker(locPosition, message);
+                    
+              });
+            
+        } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+            
+            var locPosition = new kakao.maps.LatLng(37.44933418489706, 126.65433805399361),    
+                message = 'geolocation을 사용할수 없어요..'
+                
+            displayMarker(locPosition, message);
+        }
+
+        function displayMarker(locPosition, message) {
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({  
+                map: map, 
+                position: locPosition
+            }); 
+            
+            var iwContent = message, // 인포윈도우에 표시할 내용
+                iwRemoveable = true;
+
+            // 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                content : iwContent,
+                removable : iwRemoveable
+            });
+            
+            // 인포윈도우를 마커위에 표시합니다 
+            infowindow.open(map, marker);
+            
+            // 지도 중심좌표를 접속위치로 변경합니다
+            map.setCenter(locPosition);      
+        }
+
+        document.getElementById('nav-form').onsubmit = function(e) {
+    e.preventDefault();
+    
+    // 예시: 시작 좌표를 가져오기
+    var startCoords = document.getElementById('start-coords').value;
+    
+    // 예시: 끝 좌표를 가져오기
+    var endCoords = document.getElementById('end-coords').value;
+    
+    // 예시: 좌표를 사용하여 경로를 계산하거나 다른 작업 수행
+    console.log('Start Coordinates:', startCoords);
+    console.log('End Coordinates:', endCoords);
+    
+    // 여기서 추가적인 로직을 작성하면 됩니다.
+    // 예를 들어, 경로를 계산하고 결과를 표시하는 코드 등.
+};
+
+
+
+
+

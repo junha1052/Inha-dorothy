@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빈 강의실 검색 결과</title>
+</head>
+<body>
+    <h1>빈 강의실 목록</h1>
+    {% if sorted_classrooms %}
+        {% for building, classrooms in sorted_classrooms.items() %}
+            <h2>{{ building }}</h2>
+            <ul>
+                {% for classroom in classrooms %}
+                    <li>{{ classroom }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>해당 조건에 맞는 빈 강의실이 없습니다.</p>
+    {% endif %}
+</body>
+</html>  
+

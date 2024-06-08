@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>건물 도면찾기</title>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        background-color: whitesmoke;
+        padding: 50px;
+    }
+
+    h1 {
+        font-size: 40px;
+        font-weight: bold;
+        color: #080808;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        position: relative;
+    }
+
+    h1:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background-color: #b80000;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .button {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        background-color: #ffffff; /* 배경색 */
+        color: #1e6b7b; /* 글자색 */
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* 그림자 */
+    }
+
+    .button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 */
+    }
+
+    .button:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 */
+    }
+</style>
+</head>
+<body>
+    <h1>건물 도면찾기</h1>
+    <div class="button-container">
+        <a href="https://app.mappedin.com/map/662f8d763d4f85efee0e49db?floor=m_dbcbebbb3c885a4d" class="button">지하층 건물 도면 보기</a>
+        <a href="https://app.mappedin.com/map/66327b7e8004177ee42bcc86?floor=m_3457adc7e62b399d" class="button">1층 건물 도면 보기</a>
+        <a href="https://app.mappedin.com/map/663284bf8004177ee42bcc8a?floor=m_cafb6a3291bdb011" class="button">2층 건물 도면 보기</a>
+        <a href="https://app.mappedin.com/map/662f900157126d563e5991ee?floor=m_df4cabcf84564ba9" class="button">3층 건물 도면 보기</a>
+        <a href="https://app.mappedin.com/map/663289e38004177ee42bcc8b?floor=m_d3f344d27db4df72" class="button">4층 건물 도면 보기</a>
+        <a href="https://app.mappedin.com/map/662fa90f57126d563e5991f1?floor=m_d27065e25be05122" class="button">5층 건물 도면 보기</a>
+    </div>
+</body>
+</html>
