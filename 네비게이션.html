@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Inha University Campus Map</title>
+    <style>
+
+        body {
+            
+            font-family: 'Freeman', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+            
+        }
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #0055a2;
+            margin: 0;
+        }
+        .map-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px 0;
+            border: 2px solid #0055a2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #map {
+            width: 100%;
+            height: 600px; /* 맵의 높이 조정 */
+        }
+    </style>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
+    <script>
+        window.onload = function() {
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(37.44933418489706, 126.65433805399361),
+                level: 3
+            };
+
+            var map = new kakao.maps.Map(container, options);
+
+            // 마커 정보 배열
+            var positions = [
+                {
+                    title: '본관', 
+                    latlng: new kakao.maps.LatLng(37.4496269, 126.6544458),
+                    url: 'https://map.kakao.com/link/to/본관,37.4496269,126.6544458'
+                },
+                {
+                    title: '2호관', 
+                    latlng: new kakao.maps.LatLng(37.4510162, 126.655597),
+                    url: 'https://map.kakao.com/link/to/2호관,37.4510162,126.655597'
+                },
+                {
+                    title: '60주년 기념관', 
+                    latlng: new kakao.maps.LatLng(37.45082, 126.6542),
+                    url: 'https://map.kakao.com/link/to/60주년기념관,37.45082,126.6542'
+                },
+                {
+                    title: '4호관', 
+                    latlng: new kakao.maps.LatLng(37.45037, 126.6552),
+                    url: 'https://map.kakao.com/link/to/4호관,37.45037,126.6552'
+                },
+                {
+                    title: '5호관', 
+                    latlng: new kakao.maps.LatLng(37.45117, 126.6532),
+                    url: 'https://map.kakao.com/link/to/5호관,37.45117,126.6532'
+                },
+                {
+                    title: '6호관', 
+                    latlng: new kakao.maps.LatLng(37.4477242, 126.6558786),
+                    url: 'https://map.kakao.com/link/to/6호관,37.4477242,126.6558786'
+                },
+                {
+                    title: '학생회관', 
+                    latlng: new kakao.maps.LatLng(37.4496216, 126.6565310),
+                    url: 'https://map.kakao.com/link/to/학생회관,37.4496216,126.6565310'
+                },
+                {
+                    title: '정석학술정보관', 
+                    latlng: new kakao.maps.LatLng(37.4397122, 126.6633494),
+                    url: 'https://map.kakao.com/link/to/정석학술정보관,37.4397122,126.6633494'
+                },
+                {
+                    title: '9호관', 
+                    latlng: new kakao.maps.LatLng(37.4475290, 126.6552470),
+                    url: 'https://map.kakao.com/link/to/9호관,37.4475290,126.6552470'
+                },
+                {
+                    title: '서호관', 
+                    latlng: new kakao.maps.LatLng(37.4515845, 126.6507610),
+                    url: 'https://map.kakao.com/link/to/서호관,37.4515845,126.6507610'
+                },
+                {
+                    title: '나빌레관', 
+                    latlng: new kakao.maps.LatLng(37.4515963, 126.6507088),
+                    url: 'https://map.kakao.com/link/to/나빌레관,37.4515963,126.6507088'
+                },
+                {
+                    title: '하이테크센터', 
+                    latlng: new kakao.maps.LatLng(37.4507484, 126.6570103),
+                    url: 'https://map.kakao.com/link/to/하이테크센터,37.4507484,126.6570103'
+                },
+                {
+                    title: '로스쿨관', 
+                    latlng: new kakao.maps.LatLng(37.4483567, 126.6520531),
+                    url: 'https://map.kakao.com/link/to/로스쿨관,37.4483567,126.6520531'
+                },
+                {
+                    title: '정문', 
+                    latlng: new kakao.maps.LatLng(37.4472782, 126.6538485),
+                    url: 'https://map.kakao.com/link/to/정문,37.4472782,126.6538485'
+                },
+                {
+                    title: '후문', 
+                    latlng: new kakao.maps.LatLng(37.4511724, 126.6563103),
+                    url: 'https://map.kakao.com/link/to/후문,37.4511724,126.6563103'
+                }
+            ];
+
+            // 마커 생성 및 이벤트 등록
+            for (var i = 0; i < positions.length; i++) {
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: positions[i].latlng,
+                    title: positions[i].title
+                });
+
+                // 클릭 이벤트 등록
+                (function(marker, url) {
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                        window.location.href = url;
+                    });
+                })(marker, positions[i].url);
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="header">
+        <img src="https://blog.kakaocdn.net/dn/cpDZ8c/btqyG77Sc1o/Q2KKUIyCWIzGQfK1fPSeok/img.jpg" alt="INHA Logo">
+        <h1>Inha University Campus Map</h1>
+    </div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+</body>
+</html>
+
+
+
+

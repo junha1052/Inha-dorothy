@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의실 검색</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #1A1A1A; /* 짙은 회색으로 변경하여 고급스러움과 심플함을 강조 */
+    
+}
+
+.container {
+    
+    background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000206/work-002.jpg'); /* 이미지 주소 추가 */
+    background-size: cover; /* 배경 이미지가 컨테이너를 덮도록 설정 */
+    background-position: center; /* 배경 이미지의 위치를 가운데로 설정 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 배치 변경 */
+    justify-content: space-evenly; /* 요소들이 균등하게 배치되도록 조정 */
+    align-items: center;
+    padding: 20px;
+}
+
+.form-wrapper {
+    width: 60%; /* 너비를 조금 더 넓게 조정 */
+    margin: 20px;
+    padding: 40px; /* 안쪽 여백을 증가시켜 공간감을 느낄 수 있도록 함 */
+    background-color: rgba(255, 255, 255, 0.90);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* 그림자를 더욱 도드라지게 변경 */
+    border-radius: 15px; /* 모서리를 더욱 둥글게 조정 */
+    color: #333; /* 글자색 변경 */
+}
+
+.form-wrapper h2 {
+    color: #0053A0; /* 인하대학교의 상징색을 헤딩에 적용 */
+}
+
+.form-wrapper label {
+    color: #333; /* 라벨 글자색 변경 */
+}
+
+.form-wrapper input[type="search"],
+.form-wrapper select,
+.form-wrapper input[type="time"],
+.form-wrapper button {
+    border: 2px solid #0053A0; /* 테두리 색상을 인하대 상징색으로 변경 */
+    background-color: #F8F8F8; /* 입력 필드 배경색 변경 */
+    color: #333; /* 글자색 변경 */
+    border-radius: 15px; /* 입력 필드의 모서리를 둥글게 변경 */
+    padding: 10px; /* 입력 필드 내부 여백 추가 */
+}
+
+/* 버튼에 대한 스타일도 부드럽게 조정 */
+.form-wrapper button {
+    background-color: #0053A0; /* 버튼 배경색을 인하대 상징색으로 변경 */
+    color: white;
+    border-radius: 15px; /* 버튼의 모서리를 둥글게 변경 */
+    padding: 10px 20px; /* 버튼 내부 여백 추가 */
+}
+
+.form-wrapper button:hover {
+    background-color: #003D7A; /* 호버 시, 버튼 색상 변경 */
+}
+.footer {
+    bottom: 0; /* 화면의 하단에 위치 */
+    left: 0; /* 좌측에 위치 */
+    width: 100%; /* 너비를 100%로 설정 */
+    padding: 20px;
+    background-color: #0056b3;
+    color: white;
+    text-align: center;
+    z-index: 1000; /* 다른 요소들보다 위에 위치하도록 설정 */
+}
+
+.footer img {
+    max-width: 100px;
+}
+
+
+
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="form-wrapper">
+            <h2>강의실 시간표 확인 하기</h2>
+            <form method="post" action="{{ url_for('search_classroom') }}">
+                <div class="input-group">
+                    <label for="search">강의실 입력:</label>
+                    <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하시오.">
+                    <button type="submit">검색</button>
+                </div>
+                <div class="autocomplete-list" id="autocomplete-list"></div>
+            </form>
+        </div>
+        <div class="form-wrapper">
+            <h2>빈 강의실 찾기</h2>
+            <form method="post" action="{{ url_for('search_empty_classrooms') }}">
+                <label for="building">건물 선택:</label>
+                <select id="building" name="building">
+                    <option value="60">60주년 기념관</option>
+                    <option value="1">본관 1호관</option>
+                    <option value="2S">2호관(남)</option>
+                    <option value="2N">2호관(북)</option>
+                    <option value="2E">2호관(동)</option>
+                    <option value="2">2호관(서)</option>
+                    <option value="4">4호관</option>
+                    <option value="5S">5호관(남)</option>
+                    <option value="5N">5호관(북)</option>
+                    <option value="5E">5호관(동)</option>
+                    <option value="5">5호관(서)</option>
+                    <option value="6">6호관</option>
+                    <option value="7">7호관</option>
+                    <option value="9">9호관</option>
+                    <option value="하">하이테크</option>
+                    <option value="서">서호관</option>
+                </select>
+                <label for="day">요일 입력:</label>
+                <select id="day" name="day">
+                    <option value="월">월</option>
+                    <option value="화">화</option>
+                    <option value="수">수</option>
+                    <option value="목">목</option>
+                    <option value="금">금</option>
+                    <option value="토">토</option>
+                    <option value="일">일</option>
+                </select>
+                <label for="start_time">시작 시간:</label>
+                <input type="time" id="start_time" name="start_time">
+                <label for="end_time">종료 시간:</label>
+                <input type="time" id="end_time" name="end_time">
+                <button type="submit">검색</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const autocompleteList = document.getElementById('autocomplete-list');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                autocompleteList.innerHTML = '';
+
+                if (query) {
+                    fetch(`/get_suggestions?q=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const filteredSuggestions = data.suggestions;
+
+                            filteredSuggestions.forEach(suggestion => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.textContent = suggestion;
+                                suggestionItem.addEventListener('click', function() {
+                                    searchInput.value = suggestion;
+                                    autocompleteList.innerHTML = '';
+                                });
+                                autocompleteList.appendChild(suggestionItem);
+                            });
+                        });
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput) {
+                    autocompleteList.innerHTML = '';
+                }
+            });
+        });
+    </script>
+    <div class="footer">
+        <img src="https://i.namu.wiki/i/OC2JlY9sMi7SCIl_b8pyKYGQuBHGe5gc7VtRoYqbfkKoeXVS-uwqr30Mc4lOr35S73aesEDC8o82TLpg22HCsQ.svg" alt="인하대학교">
+    </div>
+</body>
+</html>

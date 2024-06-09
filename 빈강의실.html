@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빈 강의실 검색 결과</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        body {
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000206/work-002.jpg'); /* 배경 이미지 추가 */
+    background-size: cover; /* 배경 이미지가 전체 화면을 덮도록 설정 */
+    background-position: center; /* 배경 이미지가 화면 중앙에 위치하도록 설정 */
+    background-repeat: no-repeat; /* 배경 이미지가 반복되지 않도록 설정 */
+    position: relative; /* ::before 가상 요소를 위한 상대 위치 설정 */
+    z-index: 1; /* 다른 요소들이 배경 위에 표시되도록 설정 */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2); /* 배경을 약간 불투명하게 설정 */
+    z-index: -1; /* 배경 이미지 위에 표시되도록 설정 */
+}
+
+
+        h1 {
+            color: #ffffff;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 90%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            background-color: #fff;
+            opacity: 0.9;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        p {
+            color: #888;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #0056b3;
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer img {
+            max-width: 100px;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>빈 강의실 검색 결과</h1>
+    {% if sorted_classrooms %}
+        <table>
+            <thead>
+                <tr>
+                    <th>강의실</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classroom in sorted_classrooms %}
+                    <tr>
+                        <td>{{ classroom }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>검색 결과가 없습니다.</p>
+    {% endif %}
+    <div class="footer">
+        <img src="https://i.namu.wiki/i/OC2JlY9sMi7SCIl_b8pyKYGQuBHGe5gc7VtRoYqbfkKoeXVS-uwqr30Mc4lOr35S73aesEDC8o82TLpg22HCsQ.svg" alt="인하대학교">
+    </div>
+</body>
+</html>
