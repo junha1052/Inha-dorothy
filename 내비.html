@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Inha University Campus Map</title>
+</head>
+<body>
+    <!-- 지도 표시 영역 -->
+    <div id="map" style="width:500px;height:400px;"></div>
+    
+    <!-- Kakao 지도 API 불러오기, services 라이브러리 포함 -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
+    
+    <script>
+        // 지도를 표시할 div 객체 가져오기
+        var container = document.getElementById('map');
+
+        // 지도 옵션 설정: 중심 좌표와 확대 레벨
+        var options = {
+            center: new kakao.maps.LatLng(37.44933418489706, 126.65433805399361), // 중심 좌표 (인하대학교)
+            level: 3 // 확대 레벨 (1: 최대 확대, 숫자가 클수록 축소)
+        };
+
+        // 지도 생성
+        var map = new kakao.maps.Map(container, options);
+
+        // 각 건물의 위치와 정보를 담은 배열
+        var positions = [
+            {
+                title: '본관', // 건물 이름
+                latlng: new kakao.maps.LatLng(37.4496269, 126.6544458), // 건물 좌표
+                url: 'https://map.kakao.com/link/to/본관,37.4496269,126.6544458' // 길찾기 URL
+            },
+            {
+                title: '2호관',
+                latlng: new kakao.maps.LatLng(37.4510162, 126.655597),
+                url: 'https://map.kakao.com/link/to/2호관,37.4510162,126.655597'
+            },
+            {
+                title: '60주년 기념관',
+                latlng: new kakao.maps.LatLng(37.45082, 126.6542),
+                url: 'https://map.kakao.com/link/to/60주년기념관,37.45082,126.6542'
+            },
+            {
+                title: '4호관',
+                latlng: new kakao.maps.LatLng(37.45037, 126.6552),
+                url: 'https://map.kakao.com/link/to/4호관,37.45037,126.6552'
+            },
+            {
+                title: '5호관',
+                latlng: new kakao.maps.LatLng(37.45117, 126.6532),
+                url: 'https://map.kakao.com/link/to/5호관,37.45117,126.6532'
+            },
+            {
+                title: '6호관',
+                latlng: new kakao.maps.LatLng(37.4477242, 126.6558786),
+                url: 'https://map.kakao.com/link/to/6호관,37.4477242,126.6558786'
+            },
+            {
+                title: '학생회관',
+                latlng: new kakao.maps.LatLng(37.4496216, 126.6565310),
+                url: 'https://map.kakao.com/link/to/학생회관,37.4496216,126.6565310'
+            },
+            {
+                title: '정석학술정보관',
+                latlng: new kakao.maps.LatLng(37.4494431, 126.6525193),
+                url: 'https://map.kakao.com/link/to/정석학술정보관,37.4494431,126.6525193'
+            },
+            {
+                title: '9호관',
+                latlng: new kakao.maps.LatLng(37.4475290, 126.6552470),
+                url: 'https://map.kakao.com/link/to/9호관,37.4475290,126.6552470'
+            },
+            {
+                title: '서호관',
+                latlng: new kakao.maps.LatLng(37.4515845, 126.6507610),
+                url: 'https://map.kakao.com/link/to/서호관,37.4515845,126.6507610'
+            },
+            {
+                title: '나빌레관',
+                latlng: new kakao.maps.LatLng(37.4515963, 126.6507088),
+                url: 'https://map.kakao.com/link/to/나빌레관,37.4515963,126.6507088'
+            },
+            {
+                title: '하이테크센터',
+                latlng: new kakao.maps.LatLng(37.4507484, 126.6570103),
+                url: 'https://map.kakao.com/link/to/하이테크센터,37.4507484,126.6570103'
+            },
+            {
+                title: '로스쿨관',
+                latlng: new kakao.maps.LatLng(37.4483567, 126.6520531),
+                url: 'https://map.kakao.com/link/to/로스쿨관,37.4483567,126.6520531'
+            },
+            {
+                title: '학군단',
+                latlng: new kakao.maps.LatLng(37.4490087, 126.6507631),
+                url: 'https://map.kakao.com/link/to/학군단,37.4490087, 126.6507631'
+            },
+            {
+                title: '평생교육관',
+                latlng: new kakao.maps.LatLng(37.4473348, 126.6539844),
+                url: 'https://map.kakao.com/link/to/평생교육관,37.4473348,126.6539844'
+            },
+            {
+                title: '인하드림센터',
+                latlng: new kakao.maps.LatLng(37.4486674, 126.6562181),
+                url: 'https://map.kakao.com/link/to/인하드림센터,37.4486674,126.6562181'
+            },
+            {
+                title: '체육관',
+                latlng: new kakao.maps.LatLng(37.4484756, 126.6558883),
+                url: 'https://map.kakao.com/link/to/체육관,37.4484756,126.6558883'
+            },
+            {
+                title: '대운동장',
+                latlng: new kakao.maps.LatLng(37.4497834, 126.6514710),
+                url: 'https://map.kakao.com/link/to/대운동장,37.4497834,126.6514710'
+            },
+            {
+                title: '농구장',
+                latlng: new kakao.maps.LatLng(37.4504987, 126.6518960),
+                url: 'https://map.kakao.com/link/to/농구장,37.4504987,126.6518960'
+            },
+            {
+                title: '제1생활관',
+                latlng: new kakao.maps.LatLng(37.4467336, 126.6538532),
+                url: 'https://map.kakao.com/link/to/제1생활관,37.4467336,126.6538532'
+            },
+            {
+                title: '제2생활관',
+                latlng: new kakao.maps.LatLng(37.4476170, 126.6594527),
+                url: 'https://map.kakao.com/link/to/제2생활관,37.4476170,126.6594527'
+            },
+            {
+                title: '제3생활관',
+                latlng: new kakao.maps.LatLng(37.4469034, 126.6596818),
+                url: 'https://map.kakao.com/link/to/제3생활관,37.4469034,126.6596818'
+            },
+            {
+                title: '정문',
+                latlng: new kakao.maps.LatLng(37.4472782, 126.6538485),
+                url: 'https://map.kakao.com/link/to/정문,37.4472782,126.6538485'
+            },
+            {
+                title: '후문',
+                latlng: new kakao.maps.LatLng(37.4511724, 126.6563103),
+                url: 'https://map.kakao.com/link/to/후문,37.4511724,126.6563103'
+            }
+        ];
+
+        // 배열을 순회하며 마커 생성 및 지도에 표시
+        for (var i = 0; i < positions.length; i++) {
+            // 마커 생성
+            var marker = new kakao.maps.Marker({
+                map: map, // 마커를 표시할 지도 객체
+                position: positions[i].latlng, // 마커의 위치
+                title: positions[i].title // 마커에 마우스를 올렸을 때 표시될 제목
+            });
+
+            // 마커 클릭 이벤트 등록
+            (function(marker, url) {
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    window.location.href = url; // 클릭 시 해당 URL로 이동
+                });
+            })(marker, positions[i].url);
+        }
+    </script>
+</body>
+</html>
