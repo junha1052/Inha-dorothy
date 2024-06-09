@@ -12,96 +12,96 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: space-between;
             height: 100vh;
-            background: url('https://www.inha.ac.kr/CrossEditor/binary/images/000367/%EC%9D%B8%ED%95%98%EC%9D%98_%EB%B4%84.jpg') no-repeat center center;
-            background-size: cover;
+            background-color: #f8f8f8;
         }
-        .overlay {
-            background: rgba(0, 0, 0, 0.5); /* 어두운 오버레이 추가 */
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #0055a2;
+            margin: 0;
+        }
+        .main-content {
+            width: 100%;
+            height: 82.2%;
+            position: relative;
+        }
+        .main-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 컨테이너에 맞도록 조정 */
+        }
+        .content-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .container {
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 120px;
+        .content-overlay h2 {
+            font-size: 48px;
             color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin: 0;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        .content {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+        .nav-bar {
+            width: 100%;
+            background-color: #0055a2;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
         }
-        .neon-button {
-            position: relative;
+        .nav-bar button {
+            background: none;
             border: none;
-            padding: 15px 20px;
-            background: linear-gradient(90deg, rgba(255, 215, 0, 1) 0%, rgb(236, 218, 21) 100%);
-            border-radius: 10px;
-            color: #090808;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-            font-weight: 700;
-            transition: 0.3s;
+            transition: background 0.3s;
         }
-        .neon-button:hover {
-            transform: scale(1.05);
+        .nav-bar button:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
-.neon-button:hover::after {
-    content: "";
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    background: radial-gradient(circle, rgba(255, 255, 0, 0) 0%, rgba(255, 215, 0, 0.6) 70%, rgba(255, 215, 0, 0.8) 100%);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(0.9);
-        opacity: 0.7;
-    }
-    70% {
-        transform: scale(1);
-        opacity: 0.9;
-    }
-    100% {
-        transform: scale(0.9);
-        opacity: 0.7;
-    }
-}
-
     </style>
 </head>
 <body>
-<div class="overlay"></div> <!-- 어두운 오버레이 추가 -->
-<div class="container">
     <div class="header">
+        <img src="https://blog.kakaocdn.net/dn/cpDZ8c/btqyG77Sc1o/Q2KKUIyCWIzGQfK1fPSeok/img.jpg" alt="INHA Logo">
         <h1>INHA DOROTHY</h1>
     </div>
-    <div class="content">
-        <button class="neon-button" onclick="window.location.href='/건물도면'">건물도면</button>
-        <button class="neon-button" onclick="window.location.href='/네비게이션'">네비게이션</button>
-        <button class="neon-button" onclick="window.location.href='/강의실 검색'">강의실 검색</button>
-        <button class="neon-button" onclick="window.location.href='/편의시설'">편의시설</button>
+    <div class="main-content">
+        <img src="https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg" alt="Campus Image">
+        <div class="content-overlay">
+            <h2>INHA DOROTHY</h2>
+        </div>
     </div>
-</div>
+    <div class="nav-bar">
+        <button onclick="window.location.href='/건물도면'">건물도면</button>
+        <button onclick="window.location.href='/네비게이션'">네비게이션</button>
+        <button onclick="window.location.href='/강의실 검색'">강의실 검색</button>
+        <button onclick="window.location.href='/편의시설'">편의시설</button>
+    </div>
 </body>
 </html>
+
+
