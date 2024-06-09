@@ -2,204 +2,130 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>강의실 검색</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>INHA DOROTHY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Freeman&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            height: 100%;
+        body {
+            font-family: 'Freeman', sans-serif;
             margin: 0;
             padding: 0;
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            background-color: #f8f8f8;
         }
-
-        .container {
-            background-image: linear-gradient(to bottom, #f8faff, #cce2f9);
-            min-height: 100vh;
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #0055a2;
+            margin: 0;
+        }
+        .main-content {
+            width: 100%;
+            height: 82.2%;
+            position: relative;
+            animation: backgroundChange 10s infinite; /* 여기를 수정 */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
-
-        .form-wrapper {
-            width: 45%;
-            margin: 20px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+        .content-overlay h2 {
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
         }
-
-        .form-wrapper label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .form-wrapper input[type="search"],
-        .form-wrapper select,
-        .form-wrapper input[type="time"],
-        .form-wrapper button {
+        .nav-bar {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            background-color: #0055a2(0);
+            background-color: #0055a2;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+          .nav-bar button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            padding: 10px 20px;
             font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-wrapper input[type="search"]:focus,
-        .form-wrapper select:focus,
-        .form-wrapper input[type="time"]:focus,
-        .form-wrapper button:focus {
-            border-color: dodgerblue;
-            box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
-        }
-
-        .form-wrapper button {
-            background-color: #007bff;
-            color: white;
-            border: none;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .form-wrapper button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .form-wrapper button img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .form-wrapper h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
+            transition: background 0.3s;
             text-align: center;
+            border-radius: 10px; /* 둥근 모양을 위한 border-radius 추가 */
+            font-family: 'Freeman', sans-serif; /* 글씨체 변경 */
+            font-weight: 900; /* 글씨를 조금 더 진하게 만듦 */
         }
 
-        .autocomplete-list {
-            border: none;
-            border-radius: 8px;
-            max-height: 150px;
-            overflow-y: auto;
-            position: absolute;
-            background-color: white;
-            z-index: 1;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-            margin-top: 5px;
-            width: calc(100% - 20px);
+        .nav-bar button:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .autocomplete-list div {
-            padding: 12px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .autocomplete-list div:hover {
-            background-color: #f8f8f8;
-        }
-
-        .autocomplete-list div:last-child {
-            border-bottom: none;
+        @keyframes backgroundChange {
+            0% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg');
+            }
+            20% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000437/2024.4.4_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD.jpg'); /* 두 번째 이미지 URL */
+            }
+            40% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000375/2023.5.18_-_%EC%B6%95%EC%A0%9C_%EA%B3%B5%EC%97%B0_2.jpg'); /* 세 번째 이미지 URL */
+            }
+            60% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000275/2._2022.01.13_-_%EC%9D%B8%ED%95%98%EB%8C%80_%EC%8A%A4%EC%BC%80%EC%B9%98_1_1.jpg'); /* 세 번째 이미지 URL */
+            }
+            80% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000367/%EB%B4%84_%EC%A0%84%EA%B2%BD_1.jpg'); /* 세 번째 이미지 URL */
+            }
+            100% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg');
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="form-wrapper">
-            <h2>강의실 시간표 확인 하기</h2>
-            <form method="post" action="{{ url_for('search_classroom') }}">
-                <label for="search">강의실 입력:</label>
-                <input type="search" id="search" name="search" placeholder="원하는 강의실을 입력하시오.">
-                <div class="autocomplete-list" id="autocomplete-list"></div>
-                <button type="submit"><img src="https://img.icons8.com/ios-filled/50/000000/search--v1.png"/></button>
-            </form>
-        </div>
-        <div class="form-wrapper">
-            <h2>빈 강의실 찾기</h2>
-            <form method="post" action="{{ url_for('search_empty_classrooms') }}">
-                <label for="building">건물 선택:</label>
-                <select id="building" name="building">
-                    <option value="60">60주년 기념관</option>
-                    <option value="1">본관 1호관</option>
-                    <option value="2S">2호관(남)</option>
-                    <option value="2N">2호관(북)</option>
-                    <option value="2E">2호관(동)</option>
-                    <option value="2">2호관(서)</option>
-                    <option value="4">4호관</option>
-                    <option value="5S">5호관(남)</option>
-                    <option value="5N">5호관(북)</option>
-                    <option value="5E">5호관(동)</option>
-                    <option value="5">5호관(서)</option>
-                    <option value="6">6호관</option>
-                    <option value="7">7호관</option>
-                    <option value="9">9호관</option>
-                    <option value="하">하이테크</option>
-                    <option value="서">서호관</option>
-                </select>
-                <label for="day">요일 입력:</label>
-                <select id="day" name="day">
-                    <option value="월">월</option>
-                    <option value="화">화</option>
-                    <option value="수">수</option>
-                    <option value="목">목</option>
-                    <option value="금">금</option>
-                    <option value="토">토</option>
-                    <option value="일">일</option>
-                </select>
-                <label for="start_time">시작 시간:</label>
-                <input type="time" id="start_time" name="start_time">
-                <label for="end_time">종료 시간:</label>
-                <input type="time" id="end_time" name="end_time">
-                <button type="submit">검색</button>
-            </form>
+    <div class="header">
+        <img src="https://blog.kakaocdn.net/dn/cpDZ8c/btqyG77Sc1o/Q2KKUIyCWIzGQfK1fPSeok/img.jpg" alt="INHA Logo">
+        <h1>INHA DOROTHY</h1>
+    </div>
+    <div class="main-content">
+        <div class="content-overlay">
+            <h2>INHA DOROTHY</h2>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search');
-            const autocompleteList = document.getElementById('autocomplete-list');
-
-            searchInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase();
-                autocompleteList.innerHTML = '';
-
-                if (query) {
-                    fetch(`/get_suggestions?q=${query}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            const filteredSuggestions = data.suggestions;
-
-                            filteredSuggestions.forEach(suggestion => {
-                                const suggestionItem = document.createElement('div');
-                                suggestionItem.textContent = suggestion;
-                                suggestionItem.addEventListener('click', function() {
-                                    searchInput.value = suggestion;
-                                    autocompleteList.innerHTML = '';
-                                });
-                                autocompleteList.appendChild(suggestionItem);
-                            });
-                        });
-                }
-            });
-
-            document.addEventListener('click', function(e) {
-                if (e.target !== searchInput) {
-                    autocompleteList.innerHTML = '';
-                }
-            });
-        });
-    </script>
+    <div class="nav-bar">
+        <button onclick="window.location.href='/건물도면'">건물도면</button>
+        <button onclick="window.location.href='/네비게이션'">네비게이션</button>
+        <button onclick="window.location.href='/강의실 검색'">강의실 검색</button>
+        <button onclick="window.location.href='/편의시설'">편의시설</button>
+    </div>
 </body>
 </html>
+
