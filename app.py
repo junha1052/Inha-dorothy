@@ -162,7 +162,37 @@ def 네비게이션():
 def 편의시설():
     return render_template('편의시설.html')
 
+@app.route('/show_timetable/<classroom>', methods=['GET'])
+def show_timetable(classroom):
+    # 엑셀 파일에서 데이터 읽기
+    FILE_PATH = '강의시간표.xlsx'
+    df = pd.read_excel(FILE_PATH)
+
+    # 시간표 초기화 (가정: 월~금, 1~25교시)
+    timetable = {day: ['' for _ in range(25)] for day in ['월', '화', '수', '목', '금', '토']}
+    
+    # 해당 강의실 데이터 필터링
+    filtered_rows = df.loc[df['강의실'].notna() & df['강의실'].str.contains(classroom, case=False), ['과목명', '시간']]
+    
+    # 정규 표현식 패턴 정의
+    pattern = re.compile(r'(월|화|수|목|금|토|일)(\d+(?:,\d+)*)')
+
+    for index, row in filtered_rows.iterrows():
+        subject = row['과목명']
+        time_str = row['시간']
+        
+        # 시간 값이 문자열이 아닌 경우 무시
+        if not isinstance(time_str, str):
+            continue
+        
+        matches = pattern.findall(time_str)
+        for match in matches:
+            day, periods = match
+            period_numbers = periods.split(',')
+            for period in period_numbers:
+                period = int(period)
+                if period <= 25:  # 25 교시 이하만 처리
+                    timetable[day][period - 1] = subject  # 교시는 0부터 시작하므로 -1
+    return render_template('시간표.html', timetable=timetable, building_name=classroom)
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
-
-
