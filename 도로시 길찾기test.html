@@ -37,15 +37,14 @@
             margin: 0;
         }
         .main-content {
-    width: 100%;
-    height: 82.2%;
-    position: relative;
-    animation: backgroundChange 10s infinite; /* 여기를 수정 */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
+            width: 100%;
+            height: 82.2%;
+            position: relative;
+            animation: backgroundChange 10s infinite; /* 여기를 수정 */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
         .content-overlay {
             position: absolute;
             top: 0;
@@ -71,7 +70,7 @@
             justify-content: center;
             padding: 10px 0;
         }
-        .nav-bar button {
+          .nav-bar button {
             background: none;
             border: none;
             color: #ffffff;
@@ -79,7 +78,12 @@
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s;
+            text-align: center;
+            border-radius: 10px; /* 둥근 모양을 위한 border-radius 추가 */
+            font-family: 'Freeman', sans-serif; /* 글씨체 변경 */
+            font-weight: 600; /* 글씨를 조금 더 진하게 만듦 */
         }
+
         .nav-bar button:hover {
             background: rgba(255, 255, 255, 0.2);
         }
@@ -100,7 +104,6 @@
             80% {
                 background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000367/%EB%B4%84_%EC%A0%84%EA%B2%BD_1.jpg'); /* 세 번째 이미지 URL */
             }
-
             100% {
                 background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg');
             }
