@@ -37,15 +37,15 @@
             margin: 0;
         }
         .main-content {
-            width: 100%;
-            height: 82.2%;
-            position: relative;
-        }
-        .main-content img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 이미지가 컨테이너에 맞도록 조정 */
-        }
+    width: 100%;
+    height: 82.2%;
+    position: relative;
+    animation: backgroundChange 10s infinite; /* 여기를 수정 */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
         .content-overlay {
             position: absolute;
             top: 0;
@@ -65,6 +65,7 @@
         }
         .nav-bar {
             width: 100%;
+            background-color: #0055a2(0);
             background-color: #0055a2;
             display: flex;
             justify-content: center;
@@ -82,6 +83,28 @@
         .nav-bar button:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
+        @keyframes backgroundChange {
+            0% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg');
+            }
+            20% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000437/2024.4.4_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD.jpg'); /* 두 번째 이미지 URL */
+            }
+            40% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000375/2023.5.18_-_%EC%B6%95%EC%A0%9C_%EA%B3%B5%EC%97%B0_2.jpg'); /* 세 번째 이미지 URL */
+            }
+            60% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000275/2._2022.01.13_-_%EC%9D%B8%ED%95%98%EB%8C%80_%EC%8A%A4%EC%BC%80%EC%B9%98_1_1.jpg'); /* 세 번째 이미지 URL */
+            }
+            80% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000367/%EB%B4%84_%EC%A0%84%EA%B2%BD_1.jpg'); /* 세 번째 이미지 URL */
+            }
+
+            100% {
+                background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg');
+            }
+        }
     </style>
 </head>
 <body>
@@ -90,7 +113,6 @@
         <h1>INHA DOROTHY</h1>
     </div>
     <div class="main-content">
-        <img src="https://www.inha.ac.kr/CrossEditor/binary/images/000382/2023.7.6_-_%EC%9D%B8%ED%95%98%EB%8C%80%EC%A0%84%EA%B2%BD_%EB%93%9C%EB%A1%A0_2.jpg" alt="Campus Image">
         <div class="content-overlay">
             <h2>INHA DOROTHY</h2>
         </div>
@@ -103,5 +125,6 @@
     </div>
 </body>
 </html>
+
 
 
