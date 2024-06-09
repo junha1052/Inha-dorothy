@@ -106,7 +106,8 @@ body::before {
             <tbody>
                 {% for classroom in sorted_classrooms %}
                     <tr>
-                        <td>{{ classroom }}</td>
+                        <!-- 강의실 클릭 시 강의실 시간표 페이지로 이동 -->
+                        <td><a href="{{ url_for('show_timetable', classroom=classroom) }}">{{ classroom }}</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
