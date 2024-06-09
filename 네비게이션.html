@@ -1,134 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Inha University Campus Navigation</title>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
-    <style>
-        #map {
-            width: 100%;
-            height: 400px;
-        }
-    </style>
+    <meta charset="utf-8"/>
+    <title>Inha University Campus Map</title>
 </head>
 <body>
-    <h1>Inha University Campus Navigation</h1>
-    <div id="map"></div>
-    <form id="nav-form">
-        <label for="start">출발지:</label>
-        <select id="start">
-            <option value="37.4496269,126.6544458">본관</option>
-            <option value="37.4510162,126.655597">2호관</option>
-            <option value="37.45082, 126.6542">60주년 기념관</option>
-            <option value="37.45037, 126.6552">4호관</option>
-            <option value="37.45117, 126.6532">5호관</option>
-            <option value="37.4477242, 126.6558786">6호관</option>
-            <option value="37.4496216, 126.6565310">학생회관</option>
-            <option value="37.4397122,126.6633494">정석학술정보관</option>
-            <option value="37.4475290, 126.6552470">9호관</option>
-            <option value="37.4515845, 126.6507610">서호관</option>
-            <option value="37.4515963, 126.6507088">나빌레관</option>
-            <option value="37.4507484, 126.6570103">하이테크센터</option>
-            <option value="37.4483567, 126.6520531">로스쿨관</option>
-            <option value="37.4472782, 126.6538485">정문</option>
-            <option value="37.4511724, 126.6563103">후문</option>
-        </select>
-        <label for="end">도착지:</label>
-        <select id="end">
-            <option value="37.4496269,126.6544458">본관</option>
-            <option value="37.4510162,126.655597">2호관</option>
-            <option value="37.45082, 126.6542">60주년 기념관</option>
-            <option value="37.45037, 126.6552">4호관</option>
-            <option value="37.45117, 126.6532">5호관</option>
-            <option value="37.4477242, 126.6558786">6호관</option>
-            <option value="37.4496216, 126.6565310">학생회관</option>
-            <option value="37.4397122,126.6633494">정석학술정보관</option>
-            <option value="37.4475290, 126.6552470">9호관</option>
-            <option value="37.4515845, 126.6507610">서호관</option>
-            <option value="37.4515963, 126.6507088">나빌레관</option>
-            <option value="37.4507484, 126.6570103">하이테크센터</option>
-            <option value="37.4483567, 126.6520531">로스쿨관</option>
-            <option value="37.4472782, 126.6538485">정문</option>
-            <option value="37.4511724, 126.6563103">후문</option>
-        </select>
-        <button type="submit">경로 찾기</button>
-    </form>
-    
+    <div id="map" style="width:500px;height:400px;"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbfc80086b51f57d3116c771cb190a3a&libraries=services"></script>
     <script>
-        var mapContainer = document.getElementById('map'),
-            mapOption = { 
-                center: new kakao.maps.LatLng(37.44933418489706, 126.65433805399361), // 인하대 중심 좌표
-                level: 3 
-            };
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.44933418489706, 126.65433805399361),
+            level: 3
+        };
 
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+        var map = new kakao.maps.Map(container, options);
 
-        // HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
-        if (navigator.geolocation) {
-            
-            // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-            navigator.geolocation.getCurrentPosition(function(position) {
-                
-                var lat = position.coords.latitude, // 위도
-                    lon = position.coords.longitude; // 경도
-                
-                var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-                    message = '<div style="padding:5px;">현재 위치입니다.</div>'; // 인포윈도우에 표시될 내용입니다
-                
-                // 마커와 인포윈도우를 표시합니다
-                displayMarker(locPosition, message);
-                    
-              });
-            
-        } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-            
-            var locPosition = new kakao.maps.LatLng(37.44933418489706, 126.65433805399361),    
-                message = 'geolocation을 사용할수 없어요..'
-                
-            displayMarker(locPosition, message);
-        }
+        // 마커 정보 배열
+        var positions = [
+            {
+                title: '본관', 
+                latlng: new kakao.maps.LatLng(37.4496269, 126.6544458),
+                url: 'https://map.kakao.com/link/to/본관,37.4496269,126.6544458'
+            },
+            {
+                title: '2호관', 
+                latlng: new kakao.maps.LatLng(37.4510162, 126.655597),
+                url: 'https://map.kakao.com/link/to/2호관,37.4510162,126.655597'
+            },
+            {
+                title: '60주년 기념관', 
+                latlng: new kakao.maps.LatLng(37.45082, 126.6542),
+                url: 'https://map.kakao.com/link/to/60주년기념관,37.45082,126.6542'
+            },
+            {
+                title: '4호관', 
+                latlng: new kakao.maps.LatLng(37.45037, 126.6552),
+                url: 'https://map.kakao.com/link/to/4호관,37.45037,126.6552'
+            },
+            {
+                title: '5호관', 
+                latlng: new kakao.maps.LatLng(37.45117, 126.6532),
+                url: 'https://map.kakao.com/link/to/5호관,37.45117,126.6532'
+            },
+            {
+                title: '6호관', 
+                latlng: new kakao.maps.LatLng(37.4477242, 126.6558786),
+                url: 'https://map.kakao.com/link/to/6호관,37.4477242,126.6558786'
+            },
+            {
+                title: '학생회관', 
+                latlng: new kakao.maps.LatLng(37.4496216, 126.6565310),
+                url: 'https://map.kakao.com/link/to/학생회관,37.4496216,126.6565310'
+            },
+            {
+                title: '정석학술정보관', 
+                latlng: new kakao.maps.LatLng(37.4397122, 126.6633494),
+                url: 'https://map.kakao.com/link/to/정석학술정보관,37.4397122,126.6633494'
+            },
+            {
+                title: '9호관', 
+                latlng: new kakao.maps.LatLng(37.4475290, 126.6552470),
+                url: 'https://map.kakao.com/link/to/9호관,37.4475290,126.6552470'
+            },
+            {
+                title: '서호관', 
+                latlng: new kakao.maps.LatLng(37.4515845, 126.6507610),
+                url: 'https://map.kakao.com/link/to/서호관,37.4515845,126.6507610'
+            },
+            {
+                title: '나빌레관', 
+                latlng: new kakao.maps.LatLng(37.4515963, 126.6507088),
+                url: 'https://map.kakao.com/link/to/나빌레관,37.4515963,126.6507088'
+            },
+            {
+                title: '하이테크센터', 
+                latlng: new kakao.maps.LatLng(37.4507484, 126.6570103),
+                url: 'https://map.kakao.com/link/to/하이테크센터,37.4507484,126.6570103'
+            },
+            {
+                title: '로스쿨관', 
+                latlng: new kakao.maps.LatLng(37.4483567, 126.6520531),
+                url: 'https://map.kakao.com/link/to/로스쿨관,37.4483567,126.6520531'
+            },
+            {
+                title: '정문', 
+                latlng: new kakao.maps.LatLng(37.4472782, 126.6538485),
+                url: 'https://map.kakao.com/link/to/정문,37.4472782,126.6538485'
+            },
+            {
+                title: '후문', 
+                latlng: new kakao.maps.LatLng(37.4511724, 126.6563103),
+                url: 'https://map.kakao.com/link/to/후문,37.4511724,126.6563103'
+            }
+        ];
 
-        function displayMarker(locPosition, message) {
-
-            // 마커를 생성합니다
-            var marker = new kakao.maps.Marker({  
-                map: map, 
-                position: locPosition
-            }); 
-            
-            var iwContent = message, // 인포윈도우에 표시할 내용
-                iwRemoveable = true;
-
-            // 인포윈도우를 생성합니다
-            var infowindow = new kakao.maps.InfoWindow({
-                content : iwContent,
-                removable : iwRemoveable
+        // 마커 생성 및 이벤트 등록
+        for (var i = 0; i < positions.length; i++) {
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: positions[i].latlng,
+                title: positions[i].title
             });
-            
-            // 인포윈도우를 마커위에 표시합니다 
-            infowindow.open(map, marker);
-            
-            // 지도 중심좌표를 접속위치로 변경합니다
-            map.setCenter(locPosition);      
+
+            // 클릭 이벤트 등록
+            (function(marker, url) {
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    window.location.href = url;
+                });
+            })(marker, positions[i].url);
         }
-
-        document.getElementById('nav-form').onsubmit = function(e) {
-    e.preventDefault();
-    
-    // 예시: 시작 좌표를 가져오기
-    var startCoords = document.getElementById('start-coords').value;
-    
-    // 예시: 끝 좌표를 가져오기
-    var endCoords = document.getElementById('end-coords').value;
-    
-    // 예시: 좌표를 사용하여 경로를 계산하거나 다른 작업 수행
-    console.log('Start Coordinates:', startCoords);
-    console.log('End Coordinates:', endCoords);
-    
-    // 여기서 추가적인 로직을 작성하면 됩니다.
-    // 예를 들어, 경로를 계산하고 결과를 표시하는 코드 등.
-};
-
+    </script>
+</body>
+</html>
 
 
 

@@ -5,17 +5,23 @@
     <title>시간표</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-
         body, html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            background-color: #f0f2f5;
-        }
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #f0f2f5;
+    background-image: url('https://www.inha.ac.kr/CrossEditor/binary/images/000206/work-002.jpg'); /* 배경 이미지 추가 */
+    background-size: cover; /* 배경 이미지를 화면에 꽉 차게 */
+    background-position: center; /* 배경 이미지를 화면 중앙에 위치 */
+    background-repeat: no-repeat;
+    min-height: 100vh; /* 이 부분을 추가 */
+}
+.map-container h1 {
+    color: #ffffff; /* 흰색 글자로 변경 */
+}
 
         .container {
-            background-image: linear-gradient(to bottom, #f8faff, #cce2f9); /* 그라데이션 배경 추가 */
+            background-color: rgba(255, 255, 255, 0.05); /* 컨테이너 배경을 반투명하게 설정 */
             min-height: 100vh; /* 컨테이너가 최소 화면 높이를 차지하도록 설정 */
             display: flex;
             flex-direction: column;
@@ -39,25 +45,38 @@
         }
 
         th {
-            background-color: #007bff; /* 헤더 배경색 변경 */
-            color: white; /* 헤더 글자색 변경 */
-        }
+    background-color: rgba(0, 82, 164, 0.9); /* 인하대학교 인하 블루로 헤더 배경색 변경, 불투명도 조절 */
+    color: white; /* 헤더 글자색 변경 */
+}
 
-        td {
-            background-color: #ffffff; /* 셀 배경색 변경 */
-        }
+td {
+    background-color: rgba(255, 255, 255, 0.9); /* 셀 배경색 변경, 불투명도 조절 */
+}
+
 
         /* 추가 스타일 */
         .sidebar input[type="button"]:hover, .close:hover, .close:focus {
-            background-color: #007bff; /* 버튼 호버 색상 변경 */
+            background-color: #BD2027; /* 인하대학교 인하 레드로 버튼 호버 색상 변경 */
             color: white; /* 버튼 호버 글자색 변경 */
+        }
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #0056b3;
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer img {
+            max-width: 100px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
-            <!-- <img src='https://i.namu.wiki/i/_QN323JpkEGdiuSyvavtgrxKW1JH0RmBg5CsBtBkl-FzsQLI8ND4o-IOulpXsKcC8XjjwhYuyUPq42bxH9Ocrw.svg' alt="캐릭터 이미지"> -->
+            <!-- <img src='여기에_사이드바_이미지_URL을_입력하세요' alt="캐릭터 이미지"> -->
         </div>
         <div class="map-container">
             <h1>&nbsp;&nbsp;&nbsp;{{ building_name }} 시간표</h1>
@@ -102,6 +121,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="footer">
+        <img src="https://i.namu.wiki/i/OC2JlY9sMi7SCIl_b8pyKYGQuBHGe5gc7VtRoYqbfkKoeXVS-uwqr30Mc4lOr35S73aesEDC8o82TLpg22HCsQ.svg" alt="인하대학교">
     </div>
 </body>
 </html>
