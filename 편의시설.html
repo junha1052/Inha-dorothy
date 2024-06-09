@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>INHA Campus Map</title>
+    <title>INHA DOROTHY</title>
     <style>
 .custom-info-window {
   max-width: 300px; /* 정보창의 최대 너비 설정 */
@@ -193,7 +193,7 @@
     <div class="container">
         <div class="sidebar">
             <div>
-                <h2>INHA CAMPUS MAP</h2>
+                <h2>INHA DOROTHY</h2>
                 <ul>
                     <li><input type="button" value="스터디룸" onclick="openModal('studyRoom')"></li>
                     <li><input type="button" value="라운지" onclick="openModal('lounge')"></li>
@@ -316,7 +316,7 @@
       <div class="modal-content">
           <span class="close" onclick="closeModal('studyRoom')">&times;</span>
           <h2>스터디룸</h2>
-          <p>스터디룸에 대한 정보가 여기에 표시됩니다.</p>
+          <p>이용시간: 05:00 ~ 24:00</p>
           <div id="mapStudyRoom" class="map"></div>
       </div>
     </div>
@@ -396,19 +396,19 @@
   } else if (modalId === 'studyRoom') {
     mapElementId = 'mapStudyRoom';
     locations = [
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸A (5남 032A)' },
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸B (5남 032B)' },
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸C (5남 032C)' },
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸D (5남 032D)' },
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸E (5남 032E)' },
-        { lat: 37.4509, lng: 126.6524, desc: '인문스터디룸F (5남 032F)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸A (하-132A)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸B (하-132B)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸C (하-132C)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸D (하-132D)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸E (하-132E)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸F (하-132F)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동스터디룸G (하-132G)' },
+        { lat: 37.4512, lng: 126.6521, desc: '인문스터디룸A (5남 032A)' },
+        { lat: 37.4511, lng: 126.6521, desc: '인문스터디룸B (5남 032B)' },
+        { lat: 37.4511, lng: 126.6523, desc: '인문스터디룸C (5남 032C)' },
+        { lat: 37.4510, lng: 126.6524, desc: '인문스터디룸D (5남 032D)' },
+        { lat: 37.4510, lng: 126.6525, desc: '인문스터디룸E (5남 032E)' },
+        { lat: 37.4509, lng: 126.6526, desc: '인문스터디룸F (5남 032F)' },
+        { lat: 37.4508, lng: 126.6568, desc: '해동스터디룸A (하-132A)' },
+        { lat: 37.4508, lng: 126.6569, desc: '해동스터디룸B (하-132B)' },
+        { lat: 37.4507, lng: 126.6571, desc: '해동스터디룸C (하-132C)' },
+        { lat: 37.4507, lng: 126.6572, desc: '해동스터디룸D (하-132D)' },
+        { lat: 37.4506, lng: 126.6573, desc: '해동스터디룸E (하-132E)' },
+        { lat: 37.4506, lng: 126.6574, desc: '해동스터디룸F (하-132F)' },
+        { lat: 37.4505, lng: 126.6576, desc: '해동스터디룸G (하-132G)' },
         { lat: 37.450648, lng: 126.6572, desc: '학생라운지스터디룸 (하-021)' }
     ];
 } else if (modalId === 'lounge') {
@@ -416,11 +416,11 @@
     locations = [
         { lat: 37.450375, lng: 126.6556, desc: '해동나눔 라운지 (2북 695호)' },
         { lat: 37.450648, lng: 126.6572, desc: '해동돋을볕 라운지 (하-122)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동 IT 카페 (하-101)' },
-        { lat: 37.450648, lng: 126.6572, desc: '해동 다목적실 (하-105)' },
-        { lat: 37.450648, lng: 126.6572, desc: '학생라운지 (하-022)' },
-        { lat: 37.450822, lng: 126.6542, desc: '월천라운지 (60주년1층)' },
-        { lat: 37.450822, lng: 126.6542, desc: '해동꿈지니어 라운지 (60주년 1층)' },
+        { lat: 37.4504, lng: 126.6574, desc: '해동 IT 카페 (하-101)' },
+        { lat: 37.4503, lng: 126.6573, desc: '해동 다목적실 (하-105)' },
+        { lat: 37.4502, lng: 126.6572, desc: '학생라운지 (하-022)' },
+        { lat: 37.4512, lng: 126.6546, desc: '월천라운지 (60주년1층)' },
+        { lat: 37.4504, lng: 126.6540, desc: '해동꿈지니어 라운지 (60주년 1층)' },
         { lat: 37.4509, lng: 126.6524, desc: '아름라운지 (5남 131호)' },
         { lat: 37.4499, lng: 126.6577, desc: '인천공항 물류라운지 (9호관 1층)' },
         { lat: 37.4492, lng: 126.6566, desc: '하나은행 라운지 (학생회관 2층)' },
